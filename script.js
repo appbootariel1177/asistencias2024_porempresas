@@ -32,13 +32,15 @@ document.addEventListener('DOMContentLoaded', function() {
                         td.textContent = row[headers.indexOf(header)];
                         tr.appendChild(td);
                     });
-                    tableBody.appendChild(tr);
 
                     // Captura y agrega las empresas al filtro
                     const empresa = row[headers.indexOf('Empresa')];
                     if (empresa) {
                         empresasSet.add(empresa);
+                        // Asignar color de fondo dinámico según la empresa
+                        tr.style.backgroundColor = getColorByEmpresa(empresa);
                     }
+                    tableBody.appendChild(tr);
                 });
 
                 // Llenar el filtro de empresa
@@ -69,4 +71,10 @@ document.addEventListener('DOMContentLoaded', function() {
     printButton.addEventListener('click', function() {
         window.print();
     });
+
+    function getColorByEmpresa(empresa) {
+        const hash = Array.from(empresa).reduce((acc, char) => (acc + char.charCodeAt(0)), 0);
+        const hue = hash % 360;
+        return `hsl(${hue}, 70%, 90%)`;
+    }
 });
