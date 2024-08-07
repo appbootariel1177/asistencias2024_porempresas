@@ -9,10 +9,15 @@ document.addEventListener('DOMContentLoaded', function() {
         .then(data => {
             if (data.length > 0) {
                 const headers = data[0];
+                const nonEmptyColumns = headers.map((header, index) => {
+                    // Verificar si hay datos en la columna
+                    const hasData = data.slice(1).some(row => row[index] !== '');
+                    return hasData ? header : null;
+                }).filter(header => header !== null);
 
                 // Crear encabezado de tabla
                 const headerRow = document.createElement('tr');
-                headers.forEach(header => {
+                nonEmptyColumns.forEach(header => {
                     const th = document.createElement('th');
                     th.textContent = header;
                     headerRow.appendChild(th);
@@ -22,21 +27,18 @@ document.addEventListener('DOMContentLoaded', function() {
                 const empresasSet = new Set();
                 data.slice(1).forEach(row => {
                     const tr = document.createElement('tr');
-                    row.forEach((cell, index) => {
+                    nonEmptyColumns.forEach((header, index) => {
                         const td = document.createElement('td');
-                        td.textContent = cell;
+                        td.textContent = row[headers.indexOf(header)];
                         tr.appendChild(td);
                     });
 
                     // Captura y agrega las empresas al filtro
-                    const empresaIndex = headers.indexOf('Empresa');
-                    if (empresaIndex !== -1) {
-                        const empresa = row[empresaIndex];
-                        if (empresa) {
-                            empresasSet.add(empresa);
-                            // Asignar color de fondo dinámico según la empresa
-                            tr.style.backgroundColor = getColorByEmpresa(empresa);
-                        }
+                    const empresa = row[headers.indexOf('Empresa')];
+                    if (empresa) {
+                        empresasSet.add(empresa);
+                        // Asignar color de fondo dinámico según la empresa
+                        tr.style.backgroundColor = getColorByEmpresa(empresa);
                     }
                     tableBody.appendChild(tr);
                 });
@@ -53,7 +55,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     const selectedEmpresa = this.value;
                     const rows = tableBody.querySelectorAll('tr');
                     rows.forEach(row => {
-                        const empresaCell = row.cells[empresaIndex];
+                        const empresaCell = row.cells[nonEmptyColumns.indexOf('Empresa')];
                         if (selectedEmpresa === 'All' || empresaCell.textContent === selectedEmpresa) {
                             row.style.display = '';
                         } else {
