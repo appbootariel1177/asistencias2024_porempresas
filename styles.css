@@ -17,6 +17,7 @@ body {
     width: 100%;
     max-width: 1200px;
     box-sizing: border-box;
+    overflow: auto; /* Para permitir el desplazamiento si la tabla es más ancha que el contenedor */
 }
 
 h1 {
@@ -40,6 +41,11 @@ select {
     box-sizing: border-box;
 }
 
+.table-container {
+    width: 100%;
+    overflow-x: auto; /* Permitir desplazamiento horizontal si la tabla es más ancha que el contenedor */
+}
+
 table {
     width: 100%;
     border-collapse: collapse;
@@ -49,6 +55,7 @@ th, td {
     border: 1px solid #ddd;
     padding: 8px;
     text-align: left;
+    white-space: nowrap; /* Para evitar que el contenido de las celdas se divida en varias líneas */
 }
 
 th {
