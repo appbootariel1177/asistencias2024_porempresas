@@ -17,7 +17,7 @@ body {
     width: 100%;
     max-width: 1200px;
     box-sizing: border-box;
-    overflow: auto; /* Para permitir el desplazamiento si la tabla es más ancha que el contenedor */
+    overflow: auto;
 }
 
 h1 {
@@ -43,7 +43,7 @@ select {
 
 .table-container {
     width: 100%;
-    overflow-x: auto; /* Permitir desplazamiento horizontal si la tabla es más ancha que el contenedor */
+    overflow-x: auto;
 }
 
 table {
@@ -55,7 +55,7 @@ th, td {
     border: 1px solid #ddd;
     padding: 8px;
     text-align: left;
-    white-space: nowrap; /* Para evitar que el contenido de las celdas se divida en varias líneas */
+    white-space: nowrap;
 }
 
 th {
@@ -93,4 +93,19 @@ button {
 
 button:hover {
     background-color: #45a049;
+}
+
+@media print {
+    body * {
+        visibility: hidden;
+    }
+    .print-table, .print-table * {
+        visibility: visible;
+    }
+    .print-table {
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 100%;
+    }
 }
