@@ -10,12 +10,10 @@ document.addEventListener('DOMContentLoaded', function() {
             if (data.length > 0) {
                 const headers = data[0];
                 const nonEmptyColumns = headers.map((header, index) => {
-                    // Verificar si hay datos en la columna
                     const hasData = data.slice(1).some(row => row[index] !== '');
                     return hasData ? header : null;
                 }).filter(header => header !== null);
 
-                // Crear encabezado de tabla
                 const headerRow = document.createElement('tr');
                 nonEmptyColumns.forEach(header => {
                     const th = document.createElement('th');
@@ -33,17 +31,14 @@ document.addEventListener('DOMContentLoaded', function() {
                         tr.appendChild(td);
                     });
 
-                    // Captura y agrega las empresas al filtro
                     const empresa = row[headers.indexOf('Empresa')];
                     if (empresa) {
                         empresasSet.add(empresa);
-                        // Asignar color de fondo dinámico según la empresa
                         tr.style.backgroundColor = getColorByEmpresa(empresa);
                     }
                     tableBody.appendChild(tr);
                 });
 
-                // Llenar el filtro de empresa
                 empresasSet.forEach(empresa => {
                     const option = document.createElement('option');
                     option.value = empresa;
@@ -67,9 +62,30 @@ document.addEventListener('DOMContentLoaded', function() {
         })
         .catch(error => console.error('Error al cargar los datos:', error));
 
-    // Funcionalidad del botón de impresión
     printButton.addEventListener('click', function() {
-        window.print();
+        const printWindow = window.open('', '_blank');
+        const doc = printWindow.document.open();
+        const style = `
+            <style>
+                body { font-family: Arial, sans-serif; }
+                table { width: 100%; border-collapse: collapse; }
+                th, td { border: 1px solid #ddd; padding: 8px; text-align: left; white-space: nowrap; }
+                th { background-color: #f2f2f2; color: #333; }
+                tr:nth-child(even) { background-color: #f9f9f9; }
+                tr:hover { background-color: #f1f1f1; }
+            </style>
+        `;
+        doc.write('<html><head><title>Imprimir Asistencias</title>');
+        doc.write(style);
+        doc.write('</head><body>');
+        doc.write('<h1>Asistencias por Empresas datos ariel</h1>');
+        doc.write('<table>');
+        doc.write(tableHead.outerHTML);
+        doc.write(tableBody.outerHTML);
+        doc.write('</table>');
+        doc.write('</body></html>');
+        doc.close();
+        printWindow.print();
     });
 
     function getColorByEmpresa(empresa) {
